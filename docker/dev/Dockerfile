@@ -1,5 +1,8 @@
 # docker build -t memories-dev .
-# docker run --name memories-dev -dp 3000:3000 memories-dev
+# GIT_DIR=/Users/pablo/git
+# docker run --name memories-dev -d -p 3000:3000 \
+#   --mount type=bind,source=$GIT_DIR/memories/app,target=/app/memories \
+#   memories-dev
 # docker exec -it memories-dev bash
 # docker stop memories-dev; docker rm memories-dev
 
@@ -8,6 +11,7 @@ from debian:10.11
 
 RUN apt-get update && apt-get install -y \
   curl \
+  git \
   vim
 
 # https://github.com/nodesource/distributions/blob/master/README.md
@@ -16,20 +20,23 @@ RUN apt-get install -y nodejs
 
 RUN rm -rf /var/lib/apt/lists/*
 
+RUN npm install -g @angular/cli
+
 #####################################
-# npm install -g @angular/cli
-# ng new photos
+# ng new memories
 #   ? Would you like to add Angular routing? No
 #   ? Which stylesheet format would you like to use? CSS
-# cd photos/
+# cd memories/
 # ng serve --port 3000 --host 0.0.0.0
+# ng add @angular/material
+#   ? Choose a prebuilt theme: Indigo/Pink
+#   ? Set up global Angular Material typography styles? Yes
+#   ? Set up browser animations for Angular Material? Yes
 # TODO:
 # - share dir with mac to start building and push to github
 # - build and run in a brand new debian: https://angular.io/start/start-deployment
 #####################################
 
-
-#COPY app/ /app/
 #WORKDIR /app
 
 # https://angular.io/start/start-deployment
