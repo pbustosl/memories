@@ -12,6 +12,7 @@ from debian:10.11
 RUN apt-get update && apt-get install -y \
   curl \
   git \
+  top \
   vim
 
 # https://github.com/nodesource/distributions/blob/master/README.md
@@ -32,8 +33,8 @@ RUN npm install -g @angular/cli
 #   ? Choose a prebuilt theme: Indigo/Pink
 #   ? Set up global Angular Material typography styles? Yes
 #   ? Set up browser animations for Angular Material? Yes
+# ng generate component grid
 # TODO:
-# - share dir with mac to start building and push to github
 # - build and run in a brand new debian: https://angular.io/start/start-deployment
 #####################################
 
