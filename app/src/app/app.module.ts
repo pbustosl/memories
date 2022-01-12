@@ -4,14 +4,16 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MatSliderModule } from '@angular/material/slider';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { GridComponent } from './grid/grid.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    GridComponent
   ],
   imports: [
-    MatSliderModule,
+    MatGridListModule,
     BrowserModule,
     BrowserAnimationsModule
   ],
