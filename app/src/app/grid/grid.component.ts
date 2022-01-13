@@ -14,7 +14,7 @@ export class GridComponent implements OnInit {
   constructor(private nasService: NasService) { }
 
   getPhotos(): void {
-    this.photos = this.nasService.getPhotos();
+    this.nasService.getPhotos().subscribe(photos => this.photos = photos);
   }
 
   ngOnInit(): void {
