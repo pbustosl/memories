@@ -34,6 +34,7 @@ RUN npm install -g @angular/cli
 #   ? Set up global Angular Material typography styles? Yes
 #   ? Set up browser animations for Angular Material? Yes
 # ng generate component grid
+# ng generate service nas
 # TODO:
 # - build and run in a brand new debian: https://angular.io/start/start-deployment
 #####################################

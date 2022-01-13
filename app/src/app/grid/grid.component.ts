@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Photo } from '../photo';
-import { PHOTOS } from '../mock-photos';
+import { NasService } from '../nas.service';
 
 @Component({
   selector: 'app-grid',
@@ -9,11 +9,16 @@ import { PHOTOS } from '../mock-photos';
 })
 export class GridComponent implements OnInit {
 
-  constructor() { }
+  photos: Photo[] = [];
 
-  photos = PHOTOS;
+  constructor(private nasService: NasService) { }
+
+  getPhotos(): void {
+    this.photos = this.nasService.getPhotos();
+  }
 
   ngOnInit(): void {
+    this.getPhotos();
   }
 
 }
