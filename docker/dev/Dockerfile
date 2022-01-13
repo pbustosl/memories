@@ -12,7 +12,7 @@ from debian:10.11
 RUN apt-get update && apt-get install -y \
   curl \
   git \
-  top \
+  procps \
   vim
 
 # https://github.com/nodesource/distributions/blob/master/README.md
