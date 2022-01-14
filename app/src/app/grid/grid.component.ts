@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Photo } from '../photo';
+import { Memory } from '../memory';
 import { NasService } from '../nas.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
@@ -10,15 +10,15 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 })
 export class GridComponent implements OnInit {
 
-  photos: Photo[] = [];
+  memories: Memory[] = [];
   minDate: Date = new Date();
   maxDate: Date = new Date();
 
   constructor(private nasService: NasService) { }
 
-  getPhotos(): void {
+  getMemories(): void {
     // TODO get the monthly file closest to maxDate
-    this.nasService.getPhotos(this.maxDate).subscribe(photos => this.photos = photos);
+    this.nasService.getMemories(this.maxDate).subscribe(memories => this.memories = memories);
   }
 
   ngOnInit(): void {
@@ -26,7 +26,7 @@ export class GridComponent implements OnInit {
     // this.getMonthlyFiles();
     this.minDate = new Date(2001,0);
     this.maxDate = new Date();
-    this.getPhotos();
+    this.getMemories();
   }
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
@@ -34,8 +34,12 @@ export class GridComponent implements OnInit {
     if (type == 'change') {
       if (event.value != null) {
         this.maxDate = event.value;
-        this.getPhotos();
+        this.getMemories();
       }
     }
+  }
+
+  openThumbnail(memory: Memory) {
+    alert(memory.id);
   }
 }

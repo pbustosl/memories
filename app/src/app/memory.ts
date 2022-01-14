@@ -1,4 +1,4 @@
-export interface Photo {
+export interface Memory {
   id: number;
   path: string;
   tnpath: string;
