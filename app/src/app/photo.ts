@@ -3,7 +3,7 @@ export interface Photo {
   path: string;
   tnpath: string;
   url: string;
-  datetime: string;
+  datetime: Date;
   lon: number;
   lat: number;
 }
