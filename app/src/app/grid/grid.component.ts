@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Photo } from '../photo';
 import { NasService } from '../nas.service';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-grid',
@@ -10,6 +12,8 @@ import { NasService } from '../nas.service';
 export class GridComponent implements OnInit {
 
   photos: Photo[] = [];
+  minDate = new Date(2001,0);
+  maxDate = new FormControl(new Date());
 
   constructor(private nasService: NasService) { }
 
@@ -21,4 +25,7 @@ export class GridComponent implements OnInit {
     this.getPhotos();
   }
 
+  addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+    alert(`${type}: ${event.value}`);
+  }
 }

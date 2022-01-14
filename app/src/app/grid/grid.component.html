@@ -1,3 +1,7 @@
+<input matInput [value]="maxDate.value" [min]="minDate" [matDatepicker]="picker" (dateChange)="addEvent('change', $event)">
+<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+<mat-datepicker #picker startView="year"></mat-datepicker>
+
 <mat-grid-list cols="3">
   <mat-grid-tile *ngFor="let photo of photos">
     <img [src]="photo.url" />
