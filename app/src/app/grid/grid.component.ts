@@ -17,22 +17,25 @@ export class GridComponent implements OnInit {
   constructor(private nasService: NasService) { }
 
   getPhotos(): void {
+    // TODO get the monthly file closest to maxDate
     this.nasService.getPhotos(this.maxDate).subscribe(photos => this.photos = photos);
   }
 
   ngOnInit(): void {
+    // TODO get list of monthly files
+    // this.getMonthlyFiles();
     this.minDate = new Date(2001,0);
     this.maxDate = new Date();
     this.getPhotos();
   }
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+    // alert(`${type}: ${event.value}`);
     if (type == 'change') {
       if (event.value != null) {
         this.maxDate = event.value;
         this.getPhotos();
       }
     }
-    // alert(`${type}: ${event.value}`);
   }
 }

@@ -1,9 +1,10 @@
-<input matInput [value]="maxDate" [min]="minDate" [matDatepicker]="picker" (dateChange)="addEvent('change', $event)">
+<input matInput [value]="maxDate" [min]="minDate" [max]="maxDate" [matDatepicker]="picker" (dateChange)="addEvent('change', $event)">
 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 <mat-datepicker #picker startView="year"></mat-datepicker>
 
 <mat-grid-list cols="3">
   <mat-grid-tile *ngFor="let photo of photos">
+    <mat-grid-tile-header>{{ photo.datetime | date:'EEE, MMM d y' }}</mat-grid-tile-header>
     <img [src]="photo.url" />
   </mat-grid-tile>
 </mat-grid-list>
