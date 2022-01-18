@@ -39,7 +39,4 @@ export class GridComponent implements OnInit {
     }
   }
 
-  openThumbnail(memory: Memory) {
-    alert(memory.id);
-  }
 }

@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -8,11 +9,13 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { GridComponent } from './grid/grid.component';
+import { ImageComponent } from './image/image.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    GridComponent
+    GridComponent,
+    ImageComponent
   ],
   imports: [
     BrowserModule,
@@ -21,6 +24,10 @@ import { GridComponent } from './grid/grid.component';
     MatGridListModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    RouterModule.forRoot([
+      { path: '', component: GridComponent },
+      { path: 'images/:id', component: ImageComponent },
+    ]),
   ],
   providers: [],
   bootstrap: [AppComponent]
