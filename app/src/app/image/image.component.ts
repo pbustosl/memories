@@ -10,6 +10,7 @@ import { Memory } from '../memory';
 export class ImageComponent implements OnInit {
 
   memory: Memory | undefined;
+  touchStart: TouchEvent | undefined;
 
   constructor(private route: ActivatedRoute) { }
 
@@ -29,6 +30,18 @@ export class ImageComponent implements OnInit {
 
     // Find the product that correspond with the id provided in route.
     // this.product = products.find(product => product.id === memoryIdFromRoute);
+  }
+
+  logTouch(evt: any, type: string) {
+    if (type == "start") {
+      this.touchStart = evt;
+    }
+    if (type == "end") {
+      alert(evt.changedTouches[0].screenX);
+      if(this.touchStart){
+        alert(this.touchStart.touches[0].screenX);
+      }
+    }
   }
 
 }
