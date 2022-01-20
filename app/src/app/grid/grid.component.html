@@ -1,9 +1,9 @@
-<input matInput [value]="maxDate" [min]="minDate" [max]="maxDate" [matDatepicker]="picker" (dateChange)="addEvent('change', $event)">
+<input matInput [value]="memoriesService.maxDate" [min]="memoriesService.minDate" [max]="memoriesService.maxDate" [matDatepicker]="picker" (dateChange)="addEvent('change', $event)">
 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 <mat-datepicker #picker startView="year"></mat-datepicker>
 
 <mat-grid-list cols="3">
-  <mat-grid-tile *ngFor="let memory of memories" >
+  <mat-grid-tile *ngFor="let memory of memoriesService.memories" >
     <a [routerLink]="['/images', memory.id]">
       <mat-grid-tile-header>{{ memory.datetime | date:'EEE, MMM d y' }}</mat-grid-tile-header>
       <img [src]="memory.tnurl" />

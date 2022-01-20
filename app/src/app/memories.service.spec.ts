@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NasService } from './nas.service';
+import { MemoriesService } from './memories.service';
 
-describe('NasService', () => {
-  let service: NasService;
+describe('MemoriesService', () => {
+  let service: MemoriesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(NasService);
+    service = TestBed.inject(MemoriesService);
   });
 
   it('should be created', () => {
