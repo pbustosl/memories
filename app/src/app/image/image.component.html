@@ -1,5 +1,5 @@
-<div *ngIf="memory">
-  <img class="images" [src]="memory.url"
+<div *ngIf="memoriesService.memories[memoryIndex]">
+  <img class="images" [src]="memoriesService.memories[memoryIndex].url"
    (touchstart)="logTouch($event, 'start')"
    (touchend)="logTouch($event, 'end')"
    style="width: 100%;"/>

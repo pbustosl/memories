@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from "@angular/router";
 import { Memory } from '../memory';
+import { MemoriesService } from '../memories.service';
 
 @Component({
   selector: 'app-image',
@@ -10,27 +11,14 @@ import { Memory } from '../memory';
 })
 export class ImageComponent implements OnInit {
 
-  memory: Memory | undefined;
+  memoryIndex: number = 0;
   touchStart: TouchEvent | undefined;
 
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  constructor(private route: ActivatedRoute, private router: Router, public memoriesService: MemoriesService) { }
 
   ngOnInit() {
-    // First get the product id from the current route.
     const routeParams = this.route.snapshot.paramMap;
-    const memoryIdFromRoute = Number(routeParams.get('id'));
-    this.memory = {
-      id: memoryIdFromRoute,
-      type: "image",
-      path: "/hello/image.jpg",
-      tnpath: "/tn/image.jpg",
-      url: "https://m.media-amazon.com/images/I/81o+mpJbPmL._SX679_PIbundle-6,TopRight,0,0_AA679SH20_.jpg",
-      tnurl: "tntest.jpg",
-      datetime: new Date(),
-    };
-
-    // Find the product that correspond with the id provided in route.
-    // this.product = products.find(product => product.id === memoryIdFromRoute);
+    this.memoryIndex = Number(routeParams.get('memoriesIndex'));
   }
 
   logTouch(evt: any, type: string) {
@@ -43,12 +31,12 @@ export class ImageComponent implements OnInit {
         var deltaY = this.touchStart.touches[0].screenY - evt.changedTouches[0].screenY;
         if (Math.abs(deltaX) > Math.abs(deltaY)){
           if (deltaX > 0){ // left
-            if(this.memory)
-              this.memory.url = "https://m.media-amazon.com/images/I/81o+mpJbPmL._SX679_PIbundle-6,TopRight,0,0_AA679SH20_.jpg";
+            if(this.memoryIndex > 0)
+              this.memoryIndex--;
           }
           else{ // right
-            if(this.memory)
-              this.memory.url = "https://m.media-amazon.com/images/I/81bnwwQxGGS._AC_SL1500_.jpg";
+            if(this.memoryIndex < this.memoriesService.memories.length - 1)
+              this.memoryIndex++;
           }
         }
         else {

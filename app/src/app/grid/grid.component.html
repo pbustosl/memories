@@ -3,8 +3,8 @@
 <mat-datepicker #picker startView="year"></mat-datepicker>
 
 <mat-grid-list cols="3">
-  <mat-grid-tile *ngFor="let memory of memoriesService.memories" >
-    <a [routerLink]="['/images', memory.id]">
+  <mat-grid-tile *ngFor="let memory of memoriesService.memories; index as i" >
+    <a [routerLink]="['/images', i]">
       <mat-grid-tile-header>{{ memory.datetime | date:'EEE, MMM d y' }}</mat-grid-tile-header>
       <img [src]="memory.tnurl" />
     </a>

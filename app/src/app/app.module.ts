@@ -26,7 +26,7 @@ import { ImageComponent } from './image/image.component';
     MatNativeDateModule,
     RouterModule.forRoot([
       { path: '', component: GridComponent },
-      { path: 'images/:id', component: ImageComponent },
+      { path: 'images/:memoriesIndex', component: ImageComponent },
     ]),
   ],
   providers: [],
