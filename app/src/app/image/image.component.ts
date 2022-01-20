@@ -33,10 +33,14 @@ export class ImageComponent implements OnInit {
           if (deltaX > 0){ // left
             if(this.memoryIndex > 0)
               this.memoryIndex--;
+            else
+              this.router.navigate(['/']);
           }
-          else{ // right
+          else { // right
             if(this.memoryIndex < this.memoriesService.memories.length - 1)
               this.memoryIndex++;
+            else
+              this.router.navigate(['/']);
           }
         }
         else {
