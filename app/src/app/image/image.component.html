@@ -1,6 +1,6 @@
-<div *ngIf="memoriesService.memories[memoryIndex]">
+<div *ngIf="memoriesService.memories[memoryIndex]" style="max-width: 100vw; max-height: 100vh;">
   <img class="images" [src]="memoriesService.memories[memoryIndex].url"
    (touchstart)="logTouch($event, 'start')"
    (touchend)="logTouch($event, 'end')"
-   style="width: 100%;"/>
+   style="max-width: 100vw; max-height: 100vh;"/>
 </div>
