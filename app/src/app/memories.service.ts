@@ -9,21 +9,12 @@ import { Memory } from './memory';
 })
 export class MemoriesService {
 
-  minDate: Date = new Date();
-  maxDate: Date = new Date();
   memories: Memory[] = [];
 
   constructor(private http: HttpClient) { }
 
-  setDate(d: Date) {
-    var memoriesUrl = '/assets/mock-thumbnails.json';
-    // TODO get list of monthly files
-    // this.getMonthlyFiles();
-    this.minDate = new Date(2001,0);
-    this.maxDate = d;
-
-    // TODO get the monthly file closest to maxDate
-    this.http.get<Memory[]>(memoriesUrl).subscribe(mems => this.memories = mems);
+  setDirIndexUrl(dirIndexUrl: string) { // 201505/dir_index.json
+    this.http.get<Memory[]>(dirIndexUrl).subscribe(mems => this.memories = mems);
   }
 
 }
