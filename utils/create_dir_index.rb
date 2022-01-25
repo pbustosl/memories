@@ -5,7 +5,7 @@
 dir = ARGV[0]
 
 a = []
-Dir[File.join(dir,'*.jpg')].each do |f|
+Dir[File.join(dir,'*.jpg')].sort.each do |f|
   datetime = nil
   if f =~ /\/IMG_([\d]{8})_([\d]{6})/ # IMG_20150520_180241945_HDR.jpg
     d = $1
