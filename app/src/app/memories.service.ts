@@ -10,11 +10,14 @@ import { Memory } from './memory';
 export class MemoriesService {
 
   memories: Memory[] = [];
+  dirName: string = "";
 
   constructor(private http: HttpClient) { }
 
-  setDirIndexUrl(dirIndexUrl: string) { // 201505/dir_index.json
+  setDirIndexUrl(dirIndexUrl: string) { // /files/201505/dir_index.json
     this.http.get<Memory[]>(dirIndexUrl).subscribe(mems => this.memories = mems);
+    var a = dirIndexUrl.split('/')
+    this.dirName = a[a.length - 2]
   }
 
 }

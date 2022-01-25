@@ -1,4 +1,4 @@
-<h1>Hello</h1>
+<p>{{ memoriesService.dirName }}</p>
 <mat-grid-list cols="3">
   <mat-grid-tile *ngFor="let memory of memoriesService.memories; index as i" >
     <a [routerLink]="['/images', i]">
