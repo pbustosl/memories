@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from "@angular/router";
 import { Memory } from '../memory';
 import { MemoriesService } from '../memories.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-image',
@@ -13,8 +14,12 @@ export class ImageComponent implements OnInit {
 
   memoryIndex: number = 0;
   touchStart: TouchEvent | undefined;
+  touchStartTime: Date = new Date();
 
-  constructor(private route: ActivatedRoute, private router: Router, public memoriesService: MemoriesService) { }
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              public memoriesService: MemoriesService,
+              private location: Location) { }
 
   ngOnInit() {
     const routeParams = this.route.snapshot.paramMap;
@@ -24,6 +29,7 @@ export class ImageComponent implements OnInit {
   logTouch(evt: any, type: string) {
     if (type == "start") {
       this.touchStart = evt;
+      this.touchStartTime = new Date();
     }
     if (type == "end") {
       if(this.touchStart){
@@ -45,7 +51,8 @@ export class ImageComponent implements OnInit {
         }
         else {
           if (deltaY > 0) // up
-            this.router.navigate(['/']);
+            if (new Date().getTime() - this.touchStartTime.getTime() < 200) // 200ms
+              this.location.back();
         }
         this.touchStart = undefined;
       }
