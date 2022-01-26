@@ -1,0 +1,6 @@
+<mat-list>
+  <div mat-subheader>Albums</div>
+  <mat-list-item *ngFor="let album of memoriesService.albums; index as i">
+    <div mat-line><a [routerLink]="['/album', i]">{{album.name}}</a></div>
+  </mat-list-item>
+</mat-list>

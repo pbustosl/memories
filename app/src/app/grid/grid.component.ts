@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Memory } from '../memory';
 import { MemoriesService } from '../memories.service';
 
@@ -9,11 +10,13 @@ import { MemoriesService } from '../memories.service';
 })
 export class GridComponent implements OnInit {
 
-  constructor(public memoriesService: MemoriesService) { }
+  constructor(public memoriesService: MemoriesService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.memoriesService.setDirIndexUrl('/files/201505/dir_index.json');
-    // this.memoriesService.setDirIndexUrl('/assets/mock-thumbnails.json');
+    const routeParams = this.route.snapshot.paramMap;
+    var i = Number(routeParams.get('albumIndex'));
+    this.memoriesService.setAlbum(i);
   }
 
 }

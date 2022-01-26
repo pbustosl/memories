@@ -3,30 +3,33 @@ import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatListModule } from '@angular/material/list';
 import { MatNativeDateModule } from '@angular/material/core';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { GridComponent } from './grid/grid.component';
 import { ImageComponent } from './image/image.component';
+import { AlbumsComponent } from './albums/albums.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GridComponent,
-    ImageComponent
+    ImageComponent,
+    AlbumsComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     MatGridListModule,
-    MatDatepickerModule,
+    MatListModule,
     MatNativeDateModule,
     RouterModule.forRoot([
-      { path: '', component: GridComponent },
-      { path: 'images/:memoriesIndex', component: ImageComponent },
+      { path: '', component: AlbumsComponent },
+      { path: 'album/:albumIndex', component: GridComponent },
+      { path: 'image/:memoriesIndex', component: ImageComponent },
     ]),
   ],
   providers: [],

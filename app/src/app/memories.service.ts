@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
+import { Album } from './album';
 import { Memory } from './memory';
 
 @Injectable({
@@ -9,15 +10,17 @@ import { Memory } from './memory';
 })
 export class MemoriesService {
 
+  albums: Album[] = [];
+  albumIndex: number = 0;
   memories: Memory[] = [];
-  dirName: string = "";
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.http.get<Album[]>("/assets/albums.json").subscribe(albms => this.albums = albms);
+  }
 
-  setDirIndexUrl(dirIndexUrl: string) { // /files/201505/dir_index.json
-    this.http.get<Memory[]>(dirIndexUrl).subscribe(mems => this.memories = mems);
-    var a = dirIndexUrl.split('/')
-    this.dirName = a[a.length - 2]
+  setAlbum(index: number) {
+    this.albumIndex = index
+    this.http.get<Memory[]>(this.albums[index].path).subscribe(mems => this.memories = mems);
   }
 
 }
