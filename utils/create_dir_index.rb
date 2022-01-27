@@ -41,7 +41,7 @@ Dir[File.join(dir,'*.*')].sort.each do |f|
   entry = {
     "type" => get_type(f),
     "url" => "/files/#{f}",
-    "tnurl" => "/files/#{File.join(File.dirname(f), 'thumbnails', File.basename(f))}",
+    "tnurl" => "/files/#{File.join(File.dirname(f), 'thumbnails', File.basename(f).split('.').first+'.jpg')}",
     "datetime" => get_datetime(f)
   }
   a << entry
