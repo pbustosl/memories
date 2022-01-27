@@ -1,7 +1,7 @@
 <p>{{ memoriesService.albums[memoriesService.albumIndex].name }}</p>
 <mat-grid-list cols="3">
   <mat-grid-tile *ngFor="let memory of memoriesService.memories; index as i" >
-    <a [routerLink]="['/image', i]">
+    <a [routerLink]="['/memory', i]">
       <img [src]="memory.tnurl" style="width: 100%;" />
       <mat-grid-tile-footer>{{ memory.datetime | date:'EEE, MMM d' }}{{ memory.type == 'video' ? ' ▶️' : ''}}</mat-grid-tile-footer>
     </a>

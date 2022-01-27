@@ -7,10 +7,10 @@ import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-image',
-  templateUrl: './image.component.html',
-  styleUrls: ['./image.component.css']
+  templateUrl: './memory.component.html',
+  styleUrls: ['./memory.component.css']
 })
-export class ImageComponent implements OnInit {
+export class MemoryComponent implements OnInit {
 
   memoryIndex: number = 0;
   memory: Memory | undefined;

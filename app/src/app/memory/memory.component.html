@@ -1,5 +1,5 @@
 <div *ngIf="memory" style="max-width: 100vw; max-height: 100vh;">
-  <img *ngIf="memory.type == 'image'" class="images" [src]="memory.url"
+  <img *ngIf="memory.type == 'image'" [src]="memory.url"
    (touchstart)="setTouchStart($event)"
    (touchend)="setTouchEnd($event)"
    style="max-width: 100vw; max-height: 100vh;"/>

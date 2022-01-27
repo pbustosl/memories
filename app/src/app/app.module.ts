@@ -9,14 +9,14 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { GridComponent } from './grid/grid.component';
-import { ImageComponent } from './image/image.component';
+import { MemoryComponent } from './memory/memory.component';
 import { AlbumsComponent } from './albums/albums.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GridComponent,
-    ImageComponent,
+    MemoryComponent,
     AlbumsComponent
   ],
   imports: [
@@ -29,7 +29,7 @@ import { AlbumsComponent } from './albums/albums.component';
     RouterModule.forRoot([
       { path: '', component: AlbumsComponent },
       { path: 'album/:albumIndex', component: GridComponent },
-      { path: 'image/:memoriesIndex', component: ImageComponent },
+      { path: 'memory/:memoriesIndex', component: MemoryComponent },
     ]),
   ],
   providers: [],
