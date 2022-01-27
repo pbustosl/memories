@@ -17,25 +17,44 @@ migration:
 ```
 pi@raspberrypi:/media/wd500GB/memories/tidy $ for i in $(seq -f "%02g" 1 12); do mkdir -p 2021$i/thumbnails;done
 
-# year:
+# image thumbnails year:
 pi@raspberrypi:/media/wd500GB/memories/tidy $ for f in $(ls 2021*/*.jpg); do echo $f; ~/thumbnails 240 $f $(dirname $f)/thumbnails/$(basename $f); done
 
+# video thumbnails year:
+ow=240
+oh=240
+for f in $(ls 2021*/*.mp4) $(ls 2021*/*.3gp); do
+  tn=$(basename $f)
+  tn="${tn%.*}.jpg"
+  out=$(dirname $f)/thumbnails/$tn
+  echo $f ' -> ' $out
+  ffmpeg -ss 00:00:01.000 -i $f -vframes 1 -vf "scale=max($ow\,a*$oh):max($oh\,$ow/a),crop=$ow:$oh" $out
+done
+
 # check thumbnails:
-pi@raspberrypi:/media/wd500GB/memories/tidy $ for i in $(seq -f "%02g" 1 12); do echo -n $i " "; echo -n $(ls 2021$i/*.jpg|wc -l) " "; echo  $(ls 2021$i/thumbnails/*.jpg|wc -l); done
-01  88  88
-02  226  226
-03  215  215
-04  137  137
-05  204  204
-06  259  259
-07  219  219
-08  258  258
-09  192  192
-10  138  138
-11  126  126
-12  271  271
+pi@raspberrypi:/media/wd500GB/memories/tidy $ for i in $(seq -f "%02g" 1 12); do echo -n $i " "; echo -n $(ls 2021$i/*.*|grep -v dir_index.json | wc -l) " "; echo  $(ls 2021$i/thumbnails/*.jpg|wc -l); done
+01  94  94
+02  233  233
+03  217  217
+04  152  152
+05  217  217
+06  293  293
+07  241  241
+08  266  266
+09  203  203
+10  152  152
+11  129  129
+12  324  324
 
 pi@raspberrypi:/media/wd500GB/memories/tidy $ for i in $(seq -f "%02g" 1 12); do ~/create_dir_index.rb 2021$i > 2021$i/dir_index.json; done
+
+# check unknown datetime patterns:
+grep 'unknown filename pattern' 2021*/dir_index.json
+# if they look OK, remove warnings:
+for f in $(grep 'unknown filename pattern' 2021*/dir_index.json -l); do
+  grep -v 'unknown filename pattern' $f > $f.tmp
+  mv $f.tmp $f
+done
 
 ```
 
