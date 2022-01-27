@@ -13,6 +13,7 @@ import { Location } from '@angular/common';
 export class ImageComponent implements OnInit {
 
   memoryIndex: number = 0;
+  memory: Memory | undefined;
   touchStart: TouchEvent | undefined;
   touchStartTime: Date = new Date();
 
@@ -24,39 +25,48 @@ export class ImageComponent implements OnInit {
   ngOnInit() {
     const routeParams = this.route.snapshot.paramMap;
     this.memoryIndex = Number(routeParams.get('memoriesIndex'));
+    this.memory = this.memoriesService.memories[this.memoryIndex];
   }
 
-  logTouch(evt: any, type: string) {
-    if (type == "start") {
-      this.touchStart = evt;
-      this.touchStartTime = new Date();
-    }
-    if (type == "end") {
-      if(this.touchStart){
-        var deltaX = this.touchStart.touches[0].screenX - evt.changedTouches[0].screenX;
-        var deltaY = this.touchStart.touches[0].screenY - evt.changedTouches[0].screenY;
-        if (Math.abs(deltaX) > Math.abs(deltaY)){
-          if (deltaX > 0){ // left
-            if(this.memoryIndex > 0)
-              this.memoryIndex--;
-            else
-              this.router.navigate(['/']);
+  setTouchStart(evt: any) {
+    this.touchStart = evt;
+    this.touchStartTime = new Date();
+  }
+  setTouchEnd(evt: any) {
+    if(this.touchStart){
+      if (new Date().getTime() - this.touchStartTime.getTime() < 200){ // 200ms
+        var dir = this.getTouchDirection(evt);
+        if (dir == "left"){
+          if(this.memoryIndex > 0){
+            this.memoryIndex--;
+            this.memory = this.memoriesService.memories[this.memoryIndex];
           }
-          else { // right
-            if(this.memoryIndex < this.memoriesService.memories.length - 1)
-              this.memoryIndex++;
-            else
-              this.router.navigate(['/']);
+          else
+            this.router.navigate(['/']);
+        }
+        if (dir == "right"){
+          if(this.memoryIndex < this.memoriesService.memories.length - 1){
+            this.memoryIndex++;
+            this.memory = this.memoriesService.memories[this.memoryIndex];
           }
+          else
+            this.router.navigate(['/']);
         }
-        else {
-          if (deltaY > 0) // up
-            if (new Date().getTime() - this.touchStartTime.getTime() < 200) // 200ms
-              this.location.back();
-        }
-        this.touchStart = undefined;
+        if (dir == "up")
+          this.location.back();
       }
+      this.touchStart = undefined;
     }
+  }
+  getTouchDirection(touchEndEvt: any) {
+    if (!this.touchStart)
+      return "unknown";
+    var deltaX = this.touchStart.touches[0].screenX - touchEndEvt.changedTouches[0].screenX;
+    var deltaY = this.touchStart.touches[0].screenY - touchEndEvt.changedTouches[0].screenY;
+    if (Math.abs(deltaX) > Math.abs(deltaY)) // horizontal
+      return deltaX > 0 ? "left" :  "right";
+    else // vertical
+      return deltaY > 0 ? "up" : "down";
   }
 
 }
