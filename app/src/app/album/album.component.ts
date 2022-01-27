@@ -4,11 +4,11 @@ import { Memory } from '../memory';
 import { MemoriesService } from '../memories.service';
 
 @Component({
-  selector: 'app-grid',
-  templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.css']
+  selector: 'app-album',
+  templateUrl: './album.component.html',
+  styleUrls: ['./album.component.css']
 })
-export class GridComponent implements OnInit {
+export class AlbumComponent implements OnInit {
 
   constructor(public memoriesService: MemoriesService,
               private route: ActivatedRoute) { }
