@@ -1,11 +1,66 @@
 # memories
+
+# Dev and deploy
+
+## Dev
+Create a Docker container
+```
+cd ~/git/memories/docker/dev
+docker build -t memories-dev .
+GIT_DIR=/Users/pablo/git
+docker run --name memories-dev -d -p 3000:3000 \
+  --mount type=bind,source=$GIT_DIR/memories/app,target=/app/memories \
+  memories-dev
+```
+How to get a terminal ("ssh" the container):
+```
+docker exec -it memories-dev bash
+```
+
+How to delete the container:
+```
+docker stop memories-dev; docker rm memories-dev
+```
+
+Start the dev server in the container:
 ```
 root@425b996fde28:/app/memories# ng serve --port 3000 --host 0.0.0.0
+```
+
+Write static files to dist/ (shared with laptop)
+```
 root@425b996fde28:/app/memories# ng build
+```
 
+## Deploy
 
-[Jan-26 09:19][pablo:~/git/memories/app]$ scp -r dist/memories rb:www/
+Laptop:
+```
+[Jan-27 17:45][pablo:~/git/memories]$ scp -r dist/memories rb:www/
+```
 
+Server:
+```
+pi@raspberrypi:~/www/memories $ ln -s /media/wd500GB/memories/tidy files
+pi@raspberrypi:~/www/memories $ cp /media/wd500GB/memories/tidy/albums.json assets/
+pi@raspberrypi:~/www/memories $ ls -l
+total 500
+-rw-r--r-- 1 pi pi  15179 Jan 27 15:46 3rdpartylicenses.txt
+drwxr-xr-x 2 pi pi   4096 Jan 26 09:15 assets
+-rw-r--r-- 1 pi pi   4150 Jan 27 15:46 favicon.ico
+lrwxrwxrwx 1 pi pi     28 Jan 25 16:25 files -> /media/wd500GB/memories/tidy
+-rw-r--r-- 1 pi pi   7180 Jan 27 15:46 index.html
+-rw-r--r-- 1 pi pi 356055 Jan 27 15:46 main.6f3efd04ae123090.js
+-rw-r--r-- 1 pi pi  37064 Jan 27 15:46 polyfills.7a1c853e679c16b0.js
+-rw-r--r-- 1 pi pi   1069 Jan 27 15:46 runtime.ffa194a0def003e5.js
+-rw-r--r-- 1 pi pi  73657 Jan 27 15:46 styles.68b2a3d9e76ca2bd.css
+
+pi@raspberrypi:~/www/memories $ python3 -m http.server 8000 > /dev/null 2>&1
+# Ctrl-z + bg
+```
+
+# Memories provisioning
+```
 # month:
 pi@raspberrypi:~/www/memories/files/201506 $ for f in $(ls *.jpg); do echo $f; ~/thumbnails 240 $f thumbnails/$(basename $f); done
 pi@raspberrypi:~/www/memories/files $ ~/create_dir_index.rb 201506 > 201506/dir_index.json
@@ -89,4 +144,19 @@ BMP 1
 3GP 1
 ts 2
 
+```
+
+# How I created the angular project
+```
+ng new memories
+  ? Would you like to add Angular routing? No
+  ? Which stylesheet format would you like to use? CSS
+cd memories/
+ng add @angular/material
+  ? Choose a prebuilt theme: Indigo/Pink
+  ? Set up global Angular Material typography styles? Yes
+  ? Set up browser animations for Angular Material? Yes
+ng generate component albums
+ng generate service memories
+...
 ```
