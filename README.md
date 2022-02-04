@@ -61,16 +61,24 @@ pi@raspberrypi:~/www/memories $ python3 -m http.server 8000 > /dev/null 2>&1
 
 # Memories provisioning
 ```
+pi@raspberrypi:/media/wd500GB/memories/tidy $ ~/create_albums_index.rb > albums.json
+pi@raspberrypi:/media/wd500GB/memories/tidy $ cp albums.json ~/www/memories/assets/albums.json
+
+pi@raspberrypi:/media/wd500GB/memories/tidy $ for d in $(ls|grep -v albums.json); do echo $d; ~/create_dir_index.rb $d > $d/dir_index.json; done
+
+
+
+
 # month:
-pi@raspberrypi:~/www/memories/files/201506 $ for f in $(ls *.jpg); do echo $f; ~/thumbnails 240 $f thumbnails/$(basename $f); done
-pi@raspberrypi:~/www/memories/files $ ~/create_dir_index.rb 201506 > 201506/dir_index.json
+pi@raspberrypi:~/www/memories/files/2015.06 $ for f in $(ls *.jpg); do echo $f; ~/thumbnails 240 $f thumbnails/$(basename $f); done
+pi@raspberrypi:~/www/memories/files $ ~/create_dir_index.rb 2015.06 > 2015.06/dir_index.json
 pi@raspberrypi:~/www $ vi albums.json
 
 ```
 
 migration:
 ```
-pi@raspberrypi:/media/wd500GB/memories/tidy $ for i in $(seq -f "%02g" 1 12); do mkdir -p 2021$i/thumbnails;done
+pi@raspberrypi:/media/wd500GB/memories/tidy $ for i in $(seq -f "%02g" 1 12); do mkdir -p 2021.$i/thumbnails;done
 
 # image thumbnails year:
 pi@raspberrypi:/media/wd500GB/memories/tidy $ for f in $(ls 2021*/*.jpg); do echo $f; ~/thumbnails 240 $f $(dirname $f)/thumbnails/$(basename $f); done
@@ -100,16 +108,6 @@ pi@raspberrypi:/media/wd500GB/memories/tidy $ for i in $(seq -f "%02g" 1 12); do
 10  152  152
 11  129  129
 12  324  324
-
-pi@raspberrypi:/media/wd500GB/memories/tidy $ for i in $(seq -f "%02g" 1 12); do ~/create_dir_index.rb 2021$i > 2021$i/dir_index.json; done
-
-# check unknown datetime patterns:
-grep 'unknown filename pattern' 2021*/dir_index.json
-# if they look OK, remove warnings:
-for f in $(grep 'unknown filename pattern' 2021*/dir_index.json -l); do
-  grep -v 'unknown filename pattern' $f > $f.tmp
-  mv $f.tmp $f
-done
 
 ```
 
