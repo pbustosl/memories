@@ -10,4 +10,6 @@
     <source [src]="memory.url" type="video/mp4">
     Your browser does not support HTML video.
   </video>
+  <p>{{ memory.datetime | date:'EEE, MMM d' }}</p>
+  <p>{{ memory.url.split('/').reverse()[0] }}</p>
 </div>
