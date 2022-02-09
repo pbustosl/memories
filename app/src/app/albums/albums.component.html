@@ -1,6 +1,8 @@
-<mat-list>
-  <div mat-subheader>Albums</div>
-  <mat-list-item *ngFor="let album of memoriesService.albums; index as i">
-    <div mat-line><a [routerLink]="['/album', i]">{{album.name}}</a></div>
-  </mat-list-item>
-</mat-list>
+<h1>Albums</h1>
+<div *ngFor="let y of years()" style="float: left;"><a href="#{{ y }}">{{ y }}</a>|</div>
+<div style="clear: both;"></div>
+<hr/>
+<div *ngFor="let album of memoriesService.albums; index as i">
+  <section id="{{ sectionName(album) }}"></section>
+  <a [routerLink]="['/album', i]">{{album.name}}</a>
+</div>

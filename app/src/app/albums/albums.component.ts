@@ -14,4 +14,15 @@ export class AlbumsComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  years() {
+    let ret = new Set<string>();
+    for (var album of this.memoriesService.albums) {
+      ret.add(this.sectionName(album))
+    }
+    return ret;
+  }
+  sectionName(album: Album) {
+    return album.name.split(' ')[0];
+  }
+
 }

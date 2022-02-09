@@ -69,9 +69,11 @@ mkdir thumbnails
 for f in $(ls *.jpg); do echo $f; ~/thumbnails 240 $f thumbnails/$(basename $f); done
 
 cd /media/wd500GB/memories/tidy
+
+for d in $(ls|grep -v albums.json); do echo $d; ~/create_dir_index.rb $d > $d/dir_index.json; done
+
 ~/create_albums_index.rb > albums.json; cp albums.json ~/www/memories/assets/albums.json
 
-pi@raspberrypi:/media/wd500GB/memories/tidy $ for d in $(ls|grep -v albums.json); do echo $d; ~/create_dir_index.rb $d > $d/dir_index.json; done
 
 
 # month:
@@ -84,18 +86,27 @@ pi@raspberrypi:~/www $ vi albums.json
 migration:
 ```
 
-for m in $(seq -f "%02g" 1 12); do mv *2017$m* /media/wd500GB/memories/tidy/2017.$m/; done
+for m in $(seq -f "%02g" 1 12); do mv -i *2016$m* /media/wd500GB/memories/tidy/2016.$m/; done
+for m in $(seq -f "%02g" 1 12); do mv -i *2017$m* /media/wd500GB/memories/tidy/2017.$m/; done
+for m in $(seq -f "%02g" 1 12); do mv -i *2018$m* /media/wd500GB/memories/tidy/2018.$m/; done
 
-for i in $(seq -f "%02g" 1 12); do mkdir -p 2018.$i/thumbnails;done
+for i in $(seq -f "%02g" 1 12); do mkdir -p 2016.$i/thumbnails;done
 
 # image thumbnails year:
-for d in $(ls -1|grep 2019); do mkdir $d/thumbnails; done
-pi@raspberrypi:/media/wd500GB/memories/tidy $ for f in $(ls 2019*/*.jpg 2019*/*.JPG); do echo $f; ~/thumbnails 240 $f $(dirname $f)/thumbnails/$(basename $f); done
+for d in $(ls -1|grep 2018); do mkdir $d/thumbnails; done
+# check types of the year
+find 2018* -type f | egrep -v 'jpg|mp4|dir_index.json'
+for f in $(ls 2018*/*.jpg 2018*/*.png); do
+  tn=$(basename $f)
+  tn="${tn%.*}.jpg"
+  echo $f "->" $tn;
+  ~/thumbnails 240 $f $(dirname $f)/thumbnails/$tn
+done
 
 # video thumbnails year:
 ow=240
 oh=240
-y=2019
+y=2018
 for f in $(ls $y*/*.mp4) $(ls $y*/*.3gp) $(ls $y*/*.mov) $(ls $y*/*.ts); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
@@ -104,12 +115,9 @@ for f in $(ls $y*/*.mp4) $(ls $y*/*.3gp) $(ls $y*/*.mov) $(ls $y*/*.ts); do
   ffmpeg -ss 00:00:01.000 -i $f -vframes 1 -vf "scale=max($ow\,a*$oh):max($oh\,$ow/a),crop=$ow:$oh" $out
 done
 
-# check types of the year
-find 2019* -type f | egrep -v 'jpg|jpeg|JPG|mp4|dir_index.json'
-
 
 # check thumbnails:
-y=2019
+y=2018
 for d in $(ls |grep $y); do echo -n $d " "; echo -n $(ls $d/*.*|grep -v dir_index.json | wc -l) " "; echo $(ls $d/thumbnails/*.*|wc -l); done
 01  94  94
 02  233  233
