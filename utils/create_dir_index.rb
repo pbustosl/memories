@@ -6,9 +6,9 @@ dir = ARGV[0]
 
 def get_type(filename)
   case filename.split('.').last
-  when 'jpg','jpeg','othertypehere'
+  when 'jpg','png'
     'image'
-  when 'mp4','3gp'
+  when 'mp4','3gp','mov','ts'
     'video'
   else
     raise "unknown file type #{filename}"
@@ -38,7 +38,7 @@ Dir[File.join(dir,'*.*')].sort.reverse.each do |f|
   entry = {
     "type" => get_type(f),
     "url" => "/files/#{f}",
-    "tnurl" => "/files/#{File.join(File.dirname(f), 'thumbnails', File.basename(f).split('.').first+'.jpg')}",
+    "tnurl" => "/files/#{File.join(File.dirname(f), 'thumbnails', File.basename(f).split('.')[0..-2].join('.')+'.jpg')}",
   }
   d = get_datetime(f)
   entry['datetime'] = d if d

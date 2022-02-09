@@ -36,7 +36,7 @@ root@425b996fde28:/app/memories# ng build
 
 Laptop:
 ```
-[Jan-27 17:45][pablo:~/git/memories]$ scp -r dist/memories rb:www/
+[Jan-27 17:45][pablo:~/git/memories/app]$ scp -r dist/memories rb:www/
 ```
 
 Server:
@@ -61,12 +61,17 @@ pi@raspberrypi:~/www/memories $ python3 -m http.server 8000 > /dev/null 2>&1
 
 # Memories provisioning
 ```
-pi@raspberrypi:/media/wd500GB/memories/tidy $ ~/create_albums_index.rb > albums.json
-pi@raspberrypi:/media/wd500GB/memories/tidy $ cp albums.json ~/www/memories/assets/albums.json
+cd /media/wd500GB/memories/tidy
+D=2020.08.08.simon.baptism
+~/create_dir_index.rb $D > $D/dir_index.json
+cd $D
+mkdir thumbnails
+for f in $(ls *.jpg); do echo $f; ~/thumbnails 240 $f thumbnails/$(basename $f); done
+
+cd /media/wd500GB/memories/tidy
+~/create_albums_index.rb > albums.json; cp albums.json ~/www/memories/assets/albums.json
 
 pi@raspberrypi:/media/wd500GB/memories/tidy $ for d in $(ls|grep -v albums.json); do echo $d; ~/create_dir_index.rb $d > $d/dir_index.json; done
-
-
 
 
 # month:
@@ -78,15 +83,20 @@ pi@raspberrypi:~/www $ vi albums.json
 
 migration:
 ```
-pi@raspberrypi:/media/wd500GB/memories/tidy $ for i in $(seq -f "%02g" 1 12); do mkdir -p 2021.$i/thumbnails;done
+
+for m in $(seq -f "%02g" 1 12); do mv *2017$m* /media/wd500GB/memories/tidy/2017.$m/; done
+
+for i in $(seq -f "%02g" 1 12); do mkdir -p 2018.$i/thumbnails;done
 
 # image thumbnails year:
-pi@raspberrypi:/media/wd500GB/memories/tidy $ for f in $(ls 2021*/*.jpg); do echo $f; ~/thumbnails 240 $f $(dirname $f)/thumbnails/$(basename $f); done
+for d in $(ls -1|grep 2019); do mkdir $d/thumbnails; done
+pi@raspberrypi:/media/wd500GB/memories/tidy $ for f in $(ls 2019*/*.jpg 2019*/*.JPG); do echo $f; ~/thumbnails 240 $f $(dirname $f)/thumbnails/$(basename $f); done
 
 # video thumbnails year:
 ow=240
 oh=240
-for f in $(ls 2021*/*.mp4) $(ls 2021*/*.3gp); do
+y=2019
+for f in $(ls $y*/*.mp4) $(ls $y*/*.3gp) $(ls $y*/*.mov) $(ls $y*/*.ts); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
   out=$(dirname $f)/thumbnails/$tn
@@ -94,8 +104,13 @@ for f in $(ls 2021*/*.mp4) $(ls 2021*/*.3gp); do
   ffmpeg -ss 00:00:01.000 -i $f -vframes 1 -vf "scale=max($ow\,a*$oh):max($oh\,$ow/a),crop=$ow:$oh" $out
 done
 
+# check types of the year
+find 2019* -type f | egrep -v 'jpg|jpeg|JPG|mp4|dir_index.json'
+
+
 # check thumbnails:
-pi@raspberrypi:/media/wd500GB/memories/tidy $ for i in $(seq -f "%02g" 1 12); do echo -n $i " "; echo -n $(ls 2021$i/*.*|grep -v dir_index.json | wc -l) " "; echo  $(ls 2021$i/thumbnails/*.jpg|wc -l); done
+y=2019
+for d in $(ls |grep $y); do echo -n $d " "; echo -n $(ls $d/*.*|grep -v dir_index.json | wc -l) " "; echo $(ls $d/thumbnails/*.*|wc -l); done
 01  94  94
 02  233  233
 03  217  217
