@@ -14,13 +14,19 @@ export class MemoriesService {
   albumIndex: number = 0;
   memories: Memory[] = [];
 
+  headers = new HttpHeaders({
+    'Cache-Control':  'no-cache, no-store, must-revalidate, post-check=0, pre-check=0',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
+
   constructor(private http: HttpClient) {
-    this.http.get<Album[]>("/assets/albums.json").subscribe(albms => this.albums = albms);
+    this.http.get<Album[]>("/assets/albums.json", { headers: this.headers}).subscribe(albms => this.albums = albms);
   }
 
   setAlbum(index: number) {
     this.albumIndex = index
-    this.http.get<Memory[]>(this.albums[index].path).subscribe(mems => this.memories = mems);
+    this.http.get<Memory[]>(this.albums[index].path, { headers: this.headers}).subscribe(mems => this.memories = mems);
   }
 
 }
