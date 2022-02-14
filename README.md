@@ -85,18 +85,39 @@ pi@raspberrypi:~/www $ vi albums.json
 
 migration:
 ```
+for f in $(ls *.JPG); do mv -i $f $(echo "$f"|sed 's/JPG/jpg/'); done
 
-for m in $(seq -f "%02g" 1 12); do mv -i *2016$m* /media/wd500GB/memories/tidy/2016.$m/; done
+# sudo apt install imagemagick
+function date.images(){
+  for f in $(ls *.jpg *.JPG *.png); do
+    echo
+    echo -n $f" "
+    identify -format %[exif:DateTimeOriginal] $f
+  done | stdbuf -o0 sed 's/://g' | awk -W interactive '{print "mv "$1" "$1"_"$2"_"$3}'
+}
+
+for f in $(ls *.AVI); do echo -n $f" "; ffprobe $f 2>&1|grep creation_time -m1; done
+
+for m in $(seq -f "%02g" 1 12); do mv -i *2013$m* /media/wd500GB/memories/tidy/2013.$m/; done
+for m in $(seq -f "%02g" 1 12); do mv -i *2014$m* /media/wd500GB/memories/tidy/2014.$m/; done
+for m in $(seq -f "%02g" 1 12); do mv -i *2015$m* /media/wd500GB/memories/tidy/2015.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2017$m* /media/wd500GB/memories/tidy/2017.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2018$m* /media/wd500GB/memories/tidy/2018.$m/; done
 
-for i in $(seq -f "%02g" 1 12); do mkdir -p 2016.$i/thumbnails;done
+for i in $(seq -f "%02g" 1 12); do mkdir -p 2012.$i/thumbnails;done
 
 # image thumbnails year:
-for d in $(ls -1|grep 2018); do mkdir $d/thumbnails; done
+for d in $(ls -1|grep 2014); do mkdir $d/thumbnails; done
+
+# AVI -> mp4
+SAVI=DSCN3623_20141227_140903.AVI
+DMP4="${SAVI%.*}.mp4"
+ffmpeg -i $SAVI -pix_fmt yuv420p $DMP4
+
 # check types of the year
-find 2018* -type f | egrep -v 'jpg|mp4|dir_index.json'
-for f in $(ls 2018*/*.jpg 2018*/*.png); do
+find * -type f | egrep -v 'jpg|mp4|png|3gp|mov|dir_index.json|albums.json'
+
+for f in $(ls 2014*/*.jpg 2014*/*.png); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
   echo $f "->" $tn;
@@ -106,8 +127,8 @@ done
 # video thumbnails year:
 ow=240
 oh=240
-y=2018
-for f in $(ls $y*/*.mp4) $(ls $y*/*.3gp) $(ls $y*/*.mov) $(ls $y*/*.ts); do
+y=2014
+for f in $(ls $y*/*.mp4 $y*/*.3gp $y*/*.mov); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
   out=$(dirname $f)/thumbnails/$tn
@@ -117,20 +138,18 @@ done
 
 
 # check thumbnails:
-y=2018
-for d in $(ls |grep $y); do echo -n $d " "; echo -n $(ls $d/*.*|grep -v dir_index.json | wc -l) " "; echo $(ls $d/thumbnails/*.*|wc -l); done
-01  94  94
-02  233  233
-03  217  217
-04  152  152
-05  217  217
-06  293  293
-07  241  241
-08  266  266
-09  203  203
-10  152  152
-11  129  129
-12  324  324
+for d in $(ls|grep -v albums.json); do echo -n $d " "; echo -n $(ls $d/*.*|grep -v dir_index.json | wc -l) " "; echo $(ls $d/thumbnails/*.*|wc -l); done | awk 'd=$2-$3; {print $0" diff:"d}'|grep -v diff:0
+
+
+for y in {2014..2021}; do
+  for d in $(ls|grep $y); do
+    echo $d
+    ~/create_dir_index.rb $d > $d/dir_index.json
+    done
+done
+
+~/create_albums_index.rb > albums.json; cp albums.json ~/www/memories/assets/albums.json
+
 
 ```
 

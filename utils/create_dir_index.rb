@@ -9,7 +9,7 @@ def get_type(filename)
   case filename.split('.').last
   when 'jpg','png'
     'image'
-  when 'mp4','3gp','mov','ts'
+  when 'mp4','3gp','mov'
     'video'
   else
     raise "unknown file type #{filename}"
