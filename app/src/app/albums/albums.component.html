@@ -1,5 +1,5 @@
-<h1>Albums</h1>
-<div *ngFor="let y of years()" style="float: left;"><a href="#{{ y }}">{{ y }}</a>|</div>
+<h1>albums</h1>
+<div *ngFor="let y of years()" style="float: left;"><a href="#{{ y }}">{{ y }}&nbsp;</a></div>
 <div style="clear: both;"></div>
 <hr/>
 <div *ngFor="let album of memoriesService.albums; index as i">
