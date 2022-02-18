@@ -11,5 +11,5 @@
     Your browser does not support HTML video.
   </video>
   <p>{{ memory.datetime | date:'EEE, MMM d' }}</p>
-  <p>{{ memory.url.split('/').reverse()[0] }}</p>
+  <p><a [href]="memory.url" [download]="memory.url.split('/').reverse()[0]">{{ memory.url.split('/').reverse()[0] }}</a></p>
 </div>
