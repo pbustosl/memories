@@ -34,6 +34,8 @@ root@425b996fde28:/app/memories# ng build
 
 ## Deploy
 
+### App files
+
 Laptop:
 ```
 [Jan-27 17:45][pablo:~/git/memories/app]$ scp -r dist/memories rb:www/
@@ -55,8 +57,22 @@ lrwxrwxrwx 1 pi pi     28 Jan 25 16:25 files -> /media/wd500GB/memories/tidy
 -rw-r--r-- 1 pi pi   1069 Jan 27 15:46 runtime.ffa194a0def003e5.js
 -rw-r--r-- 1 pi pi  73657 Jan 27 15:46 styles.68b2a3d9e76ca2bd.css
 
-pi@raspberrypi:~/www/memories $ python3 -m http.server 8000 > /dev/null 2>&1
-# Ctrl-z + bg
+```
+
+### service
+
+Laptop:
+```
+[Feb-16 14:03][pablo:~/git/memories]$ scp utils/memories.service rb:/etc/systemd/system/
+[Feb-16 14:03][pablo:~/git/memories]$ scp utils/memories.sh rb:/usr/local/bin/
+```
+
+Server:
+```
+sudo systemctl daemon-reload
+sudo systemctl enable memories.service
+sudo systemctl start memories.service
+sudo systemctl status memories.service
 ```
 
 # Memories provisioning
@@ -96,28 +112,29 @@ function date.images(){
   done | stdbuf -o0 sed 's/://g' | awk -W interactive '{print "mv "$1" "$1"_"$2"_"$3}'
 }
 
-for f in $(ls *.AVI); do echo -n $f" "; ffprobe $f 2>&1|grep creation_time -m1; done
+for f in $(ls *.mov); do echo -n $f" "; ffprobe $f 2>&1|grep creation_time -m1; done
 
+for m in $(seq -f "%02g" 1 12); do mv -i *2010$m* /media/wd500GB/memories/tidy/2010.$m/; done
+for m in $(seq -f "%02g" 1 12); do mv -i *2011$m* /media/wd500GB/memories/tidy/2011.$m/; done
+for m in $(seq -f "%02g" 1 12); do mv -i *2012$m* /media/wd500GB/memories/tidy/2012.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2013$m* /media/wd500GB/memories/tidy/2013.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2014$m* /media/wd500GB/memories/tidy/2014.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2015$m* /media/wd500GB/memories/tidy/2015.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2017$m* /media/wd500GB/memories/tidy/2017.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2018$m* /media/wd500GB/memories/tidy/2018.$m/; done
 
-for i in $(seq -f "%02g" 1 12); do mkdir -p 2012.$i/thumbnails;done
+for i in $(seq -f "%02g" 1 12); do mkdir -p 2010.$i/thumbnails;done
 
 # image thumbnails year:
-for d in $(ls -1|grep 2014); do mkdir $d/thumbnails; done
+for d in $(ls -1|grep 2013); do mkdir $d/thumbnails; done
 
 # AVI -> mp4
-SAVI=DSCN3623_20141227_140903.AVI
-DMP4="${SAVI%.*}.mp4"
-ffmpeg -i $SAVI -pix_fmt yuv420p $DMP4
+SAVI=DSCN3623_20131227_140903.AVI; DMP4="${SAVI%.*}.mp4"; ffmpeg -i $SAVI -pix_fmt yuv420p $DMP4
 
 # check types of the year
 find * -type f | egrep -v 'jpg|mp4|png|3gp|mov|dir_index.json|albums.json'
 
-for f in $(ls 2014*/*.jpg 2014*/*.png); do
+for f in $(ls 2013*/*.jpg 2013*/*.png); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
   echo $f "->" $tn;
@@ -127,7 +144,7 @@ done
 # video thumbnails year:
 ow=240
 oh=240
-y=2014
+y=2013
 for f in $(ls $y*/*.mp4 $y*/*.3gp $y*/*.mov); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
@@ -141,7 +158,7 @@ done
 for d in $(ls|grep -v albums.json); do echo -n $d " "; echo -n $(ls $d/*.*|grep -v dir_index.json | wc -l) " "; echo $(ls $d/thumbnails/*.*|wc -l); done | awk 'd=$2-$3; {print $0" diff:"d}'|grep -v diff:0
 
 
-for y in {2014..2021}; do
+for y in {2013..2014}; do
   for d in $(ls|grep $y); do
     echo $d
     ~/create_dir_index.rb $d > $d/dir_index.json
