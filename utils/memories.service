@@ -1,0 +1,12 @@
+# location: /etc/systemd/system/memories.service
+[Unit]
+Description=Memories
+After=network.target
+
+[Service]
+Type=simple
+Restart=no
+ExecStart=/usr/local/bin/memories.sh
+
+[Install]
+WantedBy=multi-user.target
