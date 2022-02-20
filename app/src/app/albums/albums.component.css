@@ -1,7 +1,15 @@
-h1 {
-  color: Grey;
+#memories_albums_header {
+  color: Gray;
+  background-color: #e8e8e8;
+}
+#memories_albums_body {
+  background-color: #f8f8f8;
 }
 
 a:link {
   text-decoration: none;
+  color: #686868;
+}
+a:visited {
+  color: #686868;
 }
