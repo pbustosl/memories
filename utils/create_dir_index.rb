@@ -7,7 +7,7 @@ dir = ARGV[0]
 MIN_YEAR = '1800'
 def get_type(filename)
   case filename.split('.').last
-  when 'jpg','png'
+  when 'jpg','png','bmp'
     'image'
   when 'mp4','3gp','mov'
     'video'
