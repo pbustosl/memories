@@ -114,6 +114,12 @@ function date.images(){
 
 for f in $(ls *.mov); do echo -n $f" "; ffprobe $f 2>&1|grep creation_time -m1; done
 
+for i in $(seq -f "%02g" 1 12); do mkdir -p 2006.$i/thumbnails;done
+
+for m in $(seq -f "%02g" 1 12); do mv -i *2006$m* /media/wd500GB/memories/tidy/2006.$m/; done
+for m in $(seq -f "%02g" 1 12); do mv -i *2007$m* /media/wd500GB/memories/tidy/2007.$m/; done
+for m in $(seq -f "%02g" 1 12); do mv -i *2008$m* /media/wd500GB/memories/tidy/2008.$m/; done
+for m in $(seq -f "%02g" 1 12); do mv -i *2009$m* /media/wd500GB/memories/tidy/2009.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2010$m* /media/wd500GB/memories/tidy/2010.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2011$m* /media/wd500GB/memories/tidy/2011.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2012$m* /media/wd500GB/memories/tidy/2012.$m/; done
@@ -123,18 +129,16 @@ for m in $(seq -f "%02g" 1 12); do mv -i *2015$m* /media/wd500GB/memories/tidy/2
 for m in $(seq -f "%02g" 1 12); do mv -i *2017$m* /media/wd500GB/memories/tidy/2017.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2018$m* /media/wd500GB/memories/tidy/2018.$m/; done
 
-for i in $(seq -f "%02g" 1 12); do mkdir -p 2010.$i/thumbnails;done
-
 # image thumbnails year:
-for d in $(ls -1|grep 2013); do mkdir $d/thumbnails; done
+for d in $(ls -1|grep 2007); do mkdir $d/thumbnails; done
 
 # AVI -> mp4
-SAVI=DSCN3623_20131227_140903.AVI; DMP4="${SAVI%.*}.mp4"; ffmpeg -i $SAVI -pix_fmt yuv420p $DMP4
+SAVI=DSCN3623_20071227_140903.AVI; DMP4="${SAVI%.*}.mp4"; ffmpeg -i $SAVI -pix_fmt yuv420p $DMP4
 
 # check types of the year
-find * -type f | egrep -v 'jpg|mp4|png|3gp|mov|dir_index.json|albums.json'
+find * -type f | egrep -v 'jpg|png|bmp|mp4|3gp|mov|dir_index.json|albums.json'
 
-for f in $(ls 2013*/*.jpg 2013*/*.png); do
+for f in $(ls 2007*/*.jpg 2007*/*.png 2007*/*.bmp); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
   echo $f "->" $tn;
@@ -144,7 +148,7 @@ done
 # video thumbnails year:
 ow=240
 oh=240
-y=2013
+y=2007
 for f in $(ls $y*/*.mp4 $y*/*.3gp $y*/*.mov); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
@@ -158,7 +162,7 @@ done
 for d in $(ls|grep -v albums.json); do echo -n $d " "; echo -n $(ls $d/*.*|grep -v dir_index.json | wc -l) " "; echo $(ls $d/thumbnails/*.*|wc -l); done | awk 'd=$2-$3; {print $0" diff:"d}'|grep -v diff:0
 
 
-for y in {2013..2014}; do
+for y in {2007..2009}; do
   for d in $(ls|grep $y); do
     echo $d
     ~/create_dir_index.rb $d > $d/dir_index.json
