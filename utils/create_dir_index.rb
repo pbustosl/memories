@@ -4,7 +4,6 @@
 
 dir = ARGV[0]
 
-MIN_YEAR = '1800'
 def get_type(filename)
   case filename.split('.').last
   when 'jpg','png','bmp'
@@ -16,21 +15,29 @@ def get_type(filename)
   end
 end
 
+require 'date'
+MIN_YEAR = '1800'
+MAX_YEAR = '2100'
+def valid_datetime?(s)
+  DateTime.parse s
+  s.between?(MIN_YEAR, MAX_YEAR) ? true : false
+rescue
+  false
+end
+
 def get_datetime(filename)
   case filename
   when /([\d]{8})[_-]([\d]{6})/ # IMG_20150520_180241945_HDR.jpg or Screenshot_20210401-114901_Gmail.jpg
     d = $1
     t = $2
-    d[0..3] < MIN_YEAR ? nil : "#{d[0..3]}-#{d[4..5]}-#{d[6..7]} #{t[0..1]}:#{t[2..3]}:#{t[4..5]}" # "2009-10-13 15:00:00"
-  when /IMG-([\d]{8})-WA/ # no time, only date
+    s = "#{d[0..3]}-#{d[4..5]}-#{d[6..7]} #{t[0..1]}:#{t[2..3]}:#{t[4..5]}" # "2009-10-13 15:00:00"
+  when /[^\d]([\d]{8})[^\d]/ # no time, only date
     d = $1
-    d[0..3] < MIN_YEAR ? nil : "#{d[0..3]}-#{d[4..5]}-#{d[6..7]} 00:00:00" # "2009-10-13 00:00:00"
-  when /_([\d]{8})\./ # no time, only date
-    d = $1
-    d[0..3] < MIN_YEAR ? nil : "#{d[0..3]}-#{d[4..5]}-#{d[6..7]} 00:00:00" # "2009-10-13 00:00:00"
+    s = "#{d[0..3]}-#{d[4..5]}-#{d[6..7]} 00:00:00" # "2009-10-13 00:00:00"
   else
     nil
   end
+  valid_datetime?(s) ? s : nil
 end
 
 a = []
