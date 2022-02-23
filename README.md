@@ -78,11 +78,23 @@ sudo systemctl status memories.service
 # Memories provisioning
 ```
 cd /media/wd500GB/memories/tidy
-D=2020.08.08.simon.baptism
-~/create_dir_index.rb $D > $D/dir_index.json
-cd $D
+d=2020.08.08.something
+cd $d
 mkdir thumbnails
+# image thumbnails
 for f in $(ls *.jpg); do echo $f; ~/thumbnails 240 $f thumbnails/$(basename $f); done
+cd ..
+~/create_dir_index.rb $d > $d/dir_index.json
+# video thumbnails
+ow=240
+oh=240
+for f in $(ls *.mp4 *.3gp *.mov); do
+  tn=$(basename $f)
+  tn="${tn%.*}.jpg"
+  out=$(dirname $f)/thumbnails/$tn
+  echo $f ' -> ' $out
+  ffmpeg -ss 00:00:01.000 -i $f -vframes 1 -vf "scale=max($ow\,a*$oh):max($oh\,$ow/a),crop=$ow:$oh" $out
+done
 
 cd /media/wd500GB/memories/tidy
 
@@ -112,7 +124,7 @@ function date.images(){
   done | stdbuf -o0 sed 's/://g' | awk -W interactive '{print "mv "$1" "$1"_"$2"_"$3}'
 }
 
-for f in $(ls *.mov); do echo -n $f" "; ffprobe $f 2>&1|grep creation_time -m1; done
+for f in $(ls *.mov *.mp4); do echo -n $f" "; ffprobe $f 2>&1|grep creation_time -m1; done
 
 for i in $(seq -f "%02g" 1 12); do mkdir -p 2006.$i/thumbnails;done
 
@@ -130,15 +142,15 @@ for m in $(seq -f "%02g" 1 12); do mv -i *2017$m* /media/wd500GB/memories/tidy/2
 for m in $(seq -f "%02g" 1 12); do mv -i *2018$m* /media/wd500GB/memories/tidy/2018.$m/; done
 
 # image thumbnails year:
-for d in $(ls -1|grep 2007); do mkdir $d/thumbnails; done
+for d in $(ls -1|grep 2002); do mkdir $d/thumbnails; done
 
 # AVI -> mp4
-SAVI=DSCN3623_20071227_140903.AVI; DMP4="${SAVI%.*}.mp4"; ffmpeg -i $SAVI -pix_fmt yuv420p $DMP4
+SAVI=DSCN3623_20021227_140903.AVI; DMP4="${SAVI%.*}.mp4"; ffmpeg -i $SAVI -pix_fmt yuv420p $DMP4
 
 # check types of the year
 find * -type f | egrep -v 'jpg|png|bmp|mp4|3gp|mov|dir_index.json|albums.json'
 
-for f in $(ls 2007*/*.jpg 2007*/*.png 2007*/*.bmp); do
+for f in $(ls 19*/*.jpg 19*/*.png 19*/*.bmp); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
   echo $f "->" $tn;
@@ -148,7 +160,7 @@ done
 # video thumbnails year:
 ow=240
 oh=240
-y=2007
+y=2002
 for f in $(ls $y*/*.mp4 $y*/*.3gp $y*/*.mov); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
@@ -162,11 +174,11 @@ done
 for d in $(ls|grep -v albums.json); do echo -n $d " "; echo -n $(ls $d/*.*|grep -v dir_index.json | wc -l) " "; echo $(ls $d/thumbnails/*.*|wc -l); done | awk 'd=$2-$3; {print $0" diff:"d}'|grep -v diff:0
 
 
-for y in {2007..2009}; do
+for y in {2002..2002}; do
   for d in $(ls|grep $y); do
     echo $d
     ~/create_dir_index.rb $d > $d/dir_index.json
-    done
+  done
 done
 
 ~/create_albums_index.rb > albums.json; cp albums.json ~/www/memories/assets/albums.json
