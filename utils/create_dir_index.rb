@@ -41,7 +41,7 @@ def get_datetime(filename)
 end
 
 a = []
-Dir[File.join(dir,'*.*')].sort.reverse.each do |f|
+Dir[File.join(dir,'*.*')].each do |f|
   next if f.end_with?('dir_index.json')
   entry = {
     "type" => get_type(f),
@@ -53,4 +53,4 @@ Dir[File.join(dir,'*.*')].sort.reverse.each do |f|
   a << entry
 end
 require 'json'
-puts JSON.pretty_generate a
+puts JSON.pretty_generate(a.sort_by { |e| e['datetime'] || '' })

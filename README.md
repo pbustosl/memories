@@ -103,7 +103,7 @@ ls thumbnails|wc -l
 
 export D=/media/wd500GB/memories/tidy
 
-y=2021
+y=2022
 for m in $(seq -f "%02g" 1 12); do mv -i *${y}${m}* $D/${y}.${m}/; done
 for m in $(seq -f "%02g" 1 12); do mv -i thumbnails/*${y}${m}* $D/${y}.${m}/thumbnails/; done
 
