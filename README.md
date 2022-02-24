@@ -77,14 +77,15 @@ sudo systemctl status memories.service
 
 # Memories provisioning
 ```
-cd /media/wd500GB/memories/tidy
-d=2020.08.08.something
-cd $d
+cd /media/wd500GB/memories/migrating
 mkdir thumbnails
 # image thumbnails
-for f in $(ls *.jpg); do echo $f; ~/thumbnails 240 $f thumbnails/$(basename $f); done
-cd ..
-~/create_dir_index.rb $d > $d/dir_index.json
+for f in $(ls *.jpg *.png); do
+  tn=$(basename $f)
+  tn="${tn%.*}.jpg"
+  echo $f "->" $tn;
+  ~/thumbnails 240 $f ./thumbnails/$tn
+done
 # video thumbnails
 ow=240
 oh=240
@@ -96,18 +97,26 @@ for f in $(ls *.mp4 *.3gp *.mov); do
   ffmpeg -ss 00:00:01.000 -i $f -vframes 1 -vf "scale=max($ow\,a*$oh):max($oh\,$ow/a),crop=$ow:$oh" $out
 done
 
-cd /media/wd500GB/memories/tidy
+# check num of thumbnails:
+ls|grep -v thumbnails|wc -l
+ls thumbnails|wc -l
 
-for d in $(ls|grep -v albums.json); do echo $d; ~/create_dir_index.rb $d > $d/dir_index.json; done
+export D=/media/wd500GB/memories/tidy
+
+y=2021
+for m in $(seq -f "%02g" 1 12); do mv -i *${y}${m}* $D/${y}.${m}/; done
+for m in $(seq -f "%02g" 1 12); do mv -i thumbnails/*${y}${m}* $D/${y}.${m}/thumbnails/; done
+
+cd $D
+for y in {2021..2022}; do
+  for d in $(ls|grep $y); do
+    echo $d
+    ~/create_dir_index.rb $d > $d/dir_index.json
+  done
+done
 
 ~/create_albums_index.rb > albums.json; cp albums.json ~/www/memories/assets/albums.json
 
-
-
-# month:
-pi@raspberrypi:~/www/memories/files/2015.06 $ for f in $(ls *.jpg); do echo $f; ~/thumbnails 240 $f thumbnails/$(basename $f); done
-pi@raspberrypi:~/www/memories/files $ ~/create_dir_index.rb 2015.06 > 2015.06/dir_index.json
-pi@raspberrypi:~/www $ vi albums.json
 
 ```
 
@@ -124,22 +133,20 @@ function date.images(){
   done | stdbuf -o0 sed 's/://g' | awk -W interactive '{print "mv "$1" "$1"_"$2"_"$3}'
 }
 
-for f in $(ls *.mov *.mp4); do echo -n $f" "; ffprobe $f 2>&1|grep creation_time -m1; done
+function date.video(){
+  for f in $(ls *.MOV *.AVI *.3gp *.mp4 *.mov); do
+    echo -n "mv $f ${f}_"
+    ffprobe $f 2>&1|grep creation_time -m1|awk '{print $3}' | awk -F. '{print $1}' | stdbuf -o0 sed 's/[-:]//g' | stdbuf -o0 sed 's/T/_/g'
+  done
+}
 
-for i in $(seq -f "%02g" 1 12); do mkdir -p 2006.$i/thumbnails;done
+for i in $(seq -f "%02g" 1 12); do mkdir -p 2022.$i/thumbnails;done
 
 for m in $(seq -f "%02g" 1 12); do mv -i *2006$m* /media/wd500GB/memories/tidy/2006.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2007$m* /media/wd500GB/memories/tidy/2007.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2008$m* /media/wd500GB/memories/tidy/2008.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2009$m* /media/wd500GB/memories/tidy/2009.$m/; done
 for m in $(seq -f "%02g" 1 12); do mv -i *2010$m* /media/wd500GB/memories/tidy/2010.$m/; done
-for m in $(seq -f "%02g" 1 12); do mv -i *2011$m* /media/wd500GB/memories/tidy/2011.$m/; done
-for m in $(seq -f "%02g" 1 12); do mv -i *2012$m* /media/wd500GB/memories/tidy/2012.$m/; done
-for m in $(seq -f "%02g" 1 12); do mv -i *2013$m* /media/wd500GB/memories/tidy/2013.$m/; done
-for m in $(seq -f "%02g" 1 12); do mv -i *2014$m* /media/wd500GB/memories/tidy/2014.$m/; done
-for m in $(seq -f "%02g" 1 12); do mv -i *2015$m* /media/wd500GB/memories/tidy/2015.$m/; done
-for m in $(seq -f "%02g" 1 12); do mv -i *2017$m* /media/wd500GB/memories/tidy/2017.$m/; done
-for m in $(seq -f "%02g" 1 12); do mv -i *2018$m* /media/wd500GB/memories/tidy/2018.$m/; done
 
 # image thumbnails year:
 for d in $(ls -1|grep 2002); do mkdir $d/thumbnails; done
@@ -183,39 +190,6 @@ done
 
 ~/create_albums_index.rb > albums.json; cp albums.json ~/www/memories/assets/albums.json
 
-
-```
-
-Video thumbnails
-```
-ow=240
-oh=240
-ffmpeg -ss 00:00:01.000 -i 202112/20211228_114757.mp4 -vframes 1 -vf "scale=max($ow\,a*$oh):max($oh\,$ow/a),crop=$ow:$oh" ~/20211228_114757.jpg
-```
-
-Types:
-```
-pi@raspberrypi:/media/wd500GB/memories $ find photos/ -type f -not -name "*.jpg" -not -name "*.JPG" -not -name "*.mp4" -not -name "*.MOV" -not -name "*.wmv" -not -name "Thumbs.db"  -not -name ".DS_Store"  -not -name "*.3gp"  -not -name "*.AVI"  -not -name "*.pdf"  -not -name "*.WAV"  -not -name "*.png"  -not -name "*.bmp"  -not -name "*.mov"  -not -name "*.jpeg"  -not -name "*.ppt"  -not -name "*.zip" -not -name "._.DS_Store" -not -name "*.mp3" -not -name "*.BMP"  -not -name "*.THM"  -not -name "*.3GP"  -not -name "*.ts"  -not -name "*.ini"
-
-pi@raspberrypi:/media/wd500GB/memories $ for t in jpg JPG mp4 MOV wmv 3gp AVI WAV png bmp mov jpeg mp3 BMP 3GP ts; do
->  echo -n "$t "; (find photos/ -type f -name "*.$t" | wc -l)
-> done
-jpg 10183
-JPG 13897
-mp4 824
-MOV 90
-wmv 8
-3gp 232
-AVI 16
-WAV 1
-png 76
-bmp 56
-mov 36
-jpeg 12
-mp3 1
-BMP 1
-3GP 1
-ts 2
 
 ```
 
