@@ -36,7 +36,7 @@ export class MemoryComponent implements OnInit {
     if(this.touchStart){
       if (new Date().getTime() - this.touchStartTime.getTime() < 200){ // 200ms
         var dir = this.getTouchDirection(evt);
-        if (dir == "left"){
+        if (dir == "right"){
           if(this.memoryIndex > 0){
             this.memoryIndex--;
             this.memory = this.memoriesService.memories[this.memoryIndex];
@@ -44,7 +44,7 @@ export class MemoryComponent implements OnInit {
           else
             this.router.navigate(['/']);
         }
-        if (dir == "right"){
+        if (dir == "left"){
           if(this.memoryIndex < this.memoriesService.memories.length - 1){
             this.memoryIndex++;
             this.memory = this.memoriesService.memories[this.memoryIndex];
