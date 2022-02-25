@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from "@angular/router";
 import { Memory } from '../memory';
@@ -16,6 +16,15 @@ export class MemoryComponent implements OnInit {
   memory: Memory | undefined;
   touchStart: TouchEvent | undefined;
   touchStartTime: Date = new Date();
+
+  @HostListener('window:keydown.ArrowLeft', ['$event'])
+  @HostListener('window:keydown.ArrowRight', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if(event.code == 'ArrowLeft')
+      this.handlePageFlip("right");
+    if(event.code == 'ArrowRight')
+      this.handlePageFlip("left");
+  }
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -35,25 +44,7 @@ export class MemoryComponent implements OnInit {
   setTouchEnd(evt: any) {
     if(this.touchStart){
       if (new Date().getTime() - this.touchStartTime.getTime() < 200){ // 200ms
-        var dir = this.getTouchDirection(evt);
-        if (dir == "right"){
-          if(this.memoryIndex > 0){
-            this.memoryIndex--;
-            this.memory = this.memoriesService.memories[this.memoryIndex];
-          }
-          else
-            this.router.navigate(['/']);
-        }
-        if (dir == "left"){
-          if(this.memoryIndex < this.memoriesService.memories.length - 1){
-            this.memoryIndex++;
-            this.memory = this.memoriesService.memories[this.memoryIndex];
-          }
-          else
-            this.router.navigate(['/']);
-        }
-        if (dir == "up")
-          this.location.back();
+        this.handlePageFlip(this.getTouchDirection(evt))
       }
       this.touchStart = undefined;
     }
@@ -67,6 +58,27 @@ export class MemoryComponent implements OnInit {
       return deltaX > 0 ? "left" :  "right";
     else // vertical
       return deltaY > 0 ? "up" : "down";
+  }
+
+  handlePageFlip(direction: String) {
+    if (direction == "right"){
+      if(this.memoryIndex > 0){
+        this.memoryIndex--;
+        this.memory = this.memoriesService.memories[this.memoryIndex];
+      }
+      else
+        this.router.navigate(['/']);
+    }
+    if (direction == "left"){
+      if(this.memoryIndex < this.memoriesService.memories.length - 1){
+        this.memoryIndex++;
+        this.memory = this.memoriesService.memories[this.memoryIndex];
+      }
+      else
+        this.router.navigate(['/']);
+    }
+    if (direction == "up")
+      this.location.back();
   }
 
 }
