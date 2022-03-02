@@ -206,4 +206,37 @@ ng add @angular/material
 ng generate component albums
 ng generate service memories
 ...
+
+```
+
+FYI
+```
+root@425b996fde28:/# ng --version
+Node.js version v17.3.1 detected.
+Odd numbered Node.js versions will not enter LTS status and should not be used for production. For more information, please see https://nodejs.org/en/about/releases/.
+
+     _                      _                 ____ _     ___
+    / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|
+   / △ \ | '_ \ / _` | | | | |/ _` | '__|   | |   | |    | |
+  / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
+ /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
+                |___/
+
+
+Angular CLI: 13.1.3
+Node: 17.3.1 (Unsupported)
+Package Manager: npm 8.3.0
+OS: linux x64
+
+Angular:
+...
+
+Package                      Version
+------------------------------------------------------
+@angular-devkit/architect    0.1301.3 (cli-only)
+@angular-devkit/core         13.1.3 (cli-only)
+@angular-devkit/schematics   13.1.3 (cli-only)
+@schematics/angular          13.1.3 (cli-only)
+
+Warning: The current version of Node (17.3.1) is not supported by Angular.
 ```
