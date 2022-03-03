@@ -19,11 +19,14 @@ export class MemoryComponent implements OnInit {
 
   @HostListener('window:keydown.ArrowLeft', ['$event'])
   @HostListener('window:keydown.ArrowRight', ['$event'])
+  @HostListener('window:keydown.ArrowUp', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
     if(event.code == 'ArrowLeft')
       this.handlePageFlip("right");
     if(event.code == 'ArrowRight')
       this.handlePageFlip("left");
+    if(event.code == 'ArrowUp')
+      this.handlePageFlip("up");
   }
 
   constructor(private route: ActivatedRoute,
@@ -78,7 +81,7 @@ export class MemoryComponent implements OnInit {
         this.router.navigate(['/']);
     }
     if (direction == "up")
-      this.location.back();
+      this.router.navigate(['/album',this.memoriesService.albumIndex]);
   }
 
 }
