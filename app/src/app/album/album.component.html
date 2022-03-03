@@ -2,6 +2,7 @@
 <mat-grid-list cols="3">
   <mat-grid-tile *ngFor="let memory of memoriesService.memories; index as i" >
     <a [routerLink]="['/memory', i]">
+      <section [id]="i"></section>
       <img [src]="memory.tnurl" style="width: 100%;" />
       <mat-grid-tile-footer>{{ memory.datetime | date:'EEE, MMM d' }}{{ memory.type == 'video' ? ' ▶️' : ''}}</mat-grid-tile-footer>
     </a>

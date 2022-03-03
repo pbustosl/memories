@@ -13,6 +13,7 @@ export class MemoriesService {
   albums: Album[] = [];
   albumIndex: number = 0;
   memories: Memory[] = [];
+  memoryIndex: number = 0;
 
   headers = new HttpHeaders({
     'Cache-Control':  'no-cache, no-store, must-revalidate, post-check=0, pre-check=0',

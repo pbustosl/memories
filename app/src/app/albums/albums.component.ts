@@ -12,6 +12,7 @@ export class AlbumsComponent implements OnInit {
   constructor(public memoriesService: MemoriesService) { }
 
   ngOnInit(): void {
+    this.memoriesService.memoryIndex = 0 // remove album.component's scroll memory
   }
 
   sections() {

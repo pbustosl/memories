@@ -12,7 +12,6 @@ import { Location } from '@angular/common';
 })
 export class MemoryComponent implements OnInit {
 
-  memoryIndex: number = 0;
   memory: Memory | undefined;
   touchStart: TouchEvent | undefined;
   touchStartTime: Date = new Date();
@@ -36,8 +35,8 @@ export class MemoryComponent implements OnInit {
 
   ngOnInit() {
     const routeParams = this.route.snapshot.paramMap;
-    this.memoryIndex = Number(routeParams.get('memoriesIndex'));
-    this.memory = this.memoriesService.memories[this.memoryIndex];
+    this.memoriesService.memoryIndex = Number(routeParams.get('memoriesIndex'));
+    this.memory = this.memoriesService.memories[this.memoriesService.memoryIndex];
   }
 
   setTouchStart(evt: any) {
@@ -65,23 +64,23 @@ export class MemoryComponent implements OnInit {
 
   handlePageFlip(direction: String) {
     if (direction == "right"){
-      if(this.memoryIndex > 0){
-        this.memoryIndex--;
-        this.memory = this.memoriesService.memories[this.memoryIndex];
+      if(this.memoriesService.memoryIndex > 0){
+        this.memoriesService.memoryIndex--;
+        this.memory = this.memoriesService.memories[this.memoriesService.memoryIndex];
       }
       else
         this.router.navigate(['/']);
     }
     if (direction == "left"){
-      if(this.memoryIndex < this.memoriesService.memories.length - 1){
-        this.memoryIndex++;
-        this.memory = this.memoriesService.memories[this.memoryIndex];
+      if(this.memoriesService.memoryIndex < this.memoriesService.memories.length - 1){
+        this.memoriesService.memoryIndex++;
+        this.memory = this.memoriesService.memories[this.memoriesService.memoryIndex];
       }
       else
         this.router.navigate(['/']);
     }
     if (direction == "up")
-      this.router.navigate(['/album',this.memoriesService.albumIndex]);
+      this.location.back();
   }
 
 }

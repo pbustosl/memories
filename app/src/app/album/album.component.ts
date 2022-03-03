@@ -19,4 +19,17 @@ export class AlbumComponent implements OnInit {
     this.memoriesService.setAlbum(i);
   }
 
+  ngAfterViewInit(): void {
+    this.scrollToLatestMemoryVisited();
+  }
+
+  scrollToLatestMemoryVisited(): void {
+    if (this.memoriesService.memoryIndex == 0)
+      return;
+    var elem = document.getElementById(this.memoriesService.memoryIndex.toString());
+    if (elem != null){
+      elem.scrollIntoView();
+    }
+  }
+
 }
