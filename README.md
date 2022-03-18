@@ -98,7 +98,7 @@ for f in $(ls *.mp4 *.3gp *.mov); do
 done
 
 # check num of thumbnails:
-ls|grep -v thumbnails|wc -l
+ls|egrep -v 'thumbnails|dir_index.json'|wc -l
 ls thumbnails|wc -l
 
 export D=/media/wd500GB/memories/tidy
