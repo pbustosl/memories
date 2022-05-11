@@ -81,6 +81,7 @@ export class MemoryComponent implements OnInit {
     }
     if (direction == "up")
       this.location.back();
+    return false; // in case it's called from html anchor onclick
   }
 
 }
