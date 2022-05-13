@@ -53,4 +53,4 @@ Dir[File.join(dir,'*.*')].each do |f|
   a << entry
 end
 require 'json'
-puts JSON.pretty_generate(a.sort_by { |e| e['datetime'] || '' })
+puts JSON.pretty_generate(a.sort_by { |e| e['datetime'] || e['url'] })
