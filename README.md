@@ -84,7 +84,7 @@ for f in $(ls *.jpg *.png); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
   echo $f "->" $tn;
-  ~/thumbnails 240 $f ./thumbnails/$tn
+  ~/utils/thumbnails 240 $f ./thumbnails/$tn
 done
 # video thumbnails
 ow=240
@@ -111,11 +111,11 @@ cd $D
 for y in {2021..2022}; do
   for d in $(ls|grep $y); do
     echo $d
-    ~/create_dir_index.rb $d > $d/dir_index.json
+    ~/git/memories/utils/create_dir_index.rb $d > $d/dir_index.json
   done
 done
 
-~/create_albums_index.rb > albums.json; cp albums.json ~/www/memories/assets/albums.json
+~/git/memories/utils/create_albums_index.rb > albums.json; cp albums.json ~/www/memories/assets/albums.json
 
 
 ```
@@ -161,7 +161,7 @@ for f in $(ls 19*/*.jpg 19*/*.png 19*/*.bmp); do
   tn=$(basename $f)
   tn="${tn%.*}.jpg"
   echo $f "->" $tn;
-  ~/thumbnails 240 $f $(dirname $f)/thumbnails/$tn
+  ~/utils/thumbnails 240 $f $(dirname $f)/thumbnails/$tn
 done
 
 # video thumbnails year:
@@ -184,11 +184,11 @@ for d in $(ls|grep -v albums.json); do echo -n $d " "; echo -n $(ls $d/*.*|grep 
 for y in {2002..2002}; do
   for d in $(ls|grep $y); do
     echo $d
-    ~/create_dir_index.rb $d > $d/dir_index.json
+    ~/git/memories/utils/create_dir_index.rb $d > $d/dir_index.json
   done
 done
 
-~/create_albums_index.rb > albums.json; cp albums.json ~/www/memories/assets/albums.json
+~/git/memories/utils/create_albums_index.rb > albums.json; cp albums.json ~/www/memories/assets/albums.json
 
 
 ```
