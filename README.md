@@ -78,6 +78,12 @@ sudo systemctl status memories.service
 # Memories provisioning
 ```
 cd /media/wd500GB/memories/migrating
+# rename any jpeg as jpg
+# all file names must match the *${y}${m}* pattern
+# remove any space
+# remove any parenthesis
+ls *|grep '('
+
 mkdir thumbnails
 # image thumbnails
 for f in $(ls *.jpg *.png); do
@@ -103,12 +109,14 @@ ls thumbnails|wc -l
 
 export D=/media/wd500GB/memories/tidy
 
-y=2022
+for i in $(seq -f "%02g" 1 12); do mkdir -p 2024.$i/thumbnails;done
+
+y=2024
 for m in $(seq -f "%02g" 1 12); do mv -i *${y}${m}* $D/${y}.${m}/; done
 for m in $(seq -f "%02g" 1 12); do mv -i thumbnails/*${y}${m}* $D/${y}.${m}/thumbnails/; done
 
 cd $D
-for y in {2021..2022}; do
+for y in {2023..2024}; do
   for d in $(ls|grep $y); do
     echo $d
     ~/git/memories/utils/create_dir_index.rb $d > $d/dir_index.json
