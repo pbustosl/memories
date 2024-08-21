@@ -1,4 +1,4 @@
-from debian:10.11
+from debian:12
 
 RUN apt-get update && apt-get install -y \
   curl \
@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
   vim
 
 # https://github.com/nodesource/distributions/blob/master/README.md
-RUN curl -fsSL https://deb.nodesource.com/setup_17.x | bash -
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs
 
 RUN rm -rf /var/lib/apt/lists/*

@@ -24,11 +24,13 @@ docker stop memories-dev; docker rm memories-dev
 
 Start the dev server in the container:
 ```
+root@425b996fde28:/app/memories# npm install
 root@425b996fde28:/app/memories# ng serve --port 3000 --host 0.0.0.0
 ```
 
 Write static files to dist/ (shared with laptop)
 ```
+root@425b996fde28:/app/memories# npm install
 root@425b996fde28:/app/memories# ng build
 ```
 
