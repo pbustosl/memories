@@ -6,7 +6,7 @@ dir = ARGV[0]
 
 def get_type(filename)
   case filename.split('.').last
-  when 'jpg','png','bmp'
+  when 'jpg','png','bmp', 'heic'
     'image'
   when 'mp4','3gp','mov'
     'video'
