@@ -79,12 +79,16 @@ sudo systemctl status memories.service
 
 # Memories provisioning
 ```
-cd /media/wd500GB/memories/migrating
 # rename any jpeg as jpg
 # all file names must match the *${y}${m}* pattern
 # remove any space
 # remove any parenthesis
 ls *|grep '('
+# on mac:
+~/git/memories/utils/clean.sh migrate/
+
+# on pi:
+cd /var/lib/memories/migrating
 
 mkdir thumbnails
 # image thumbnails
@@ -109,16 +113,16 @@ done
 ls|egrep -v 'thumbnails|dir_index.json'|wc -l
 ls thumbnails|wc -l
 
-export D=/media/wd500GB/memories/tidy
+export D=/var/lib/memories/tidy
 
-for i in $(seq -f "%02g" 1 12); do mkdir -p 2024.$i/thumbnails;done
+for i in $(seq -f "%02g" 1 12); do mkdir -p $D/2026.$i/thumbnails;done
 
-y=2024
-for m in $(seq -f "%02g" 1 12); do mv -i *${y}${m}* $D/${y}.${m}/; done
-for m in $(seq -f "%02g" 1 12); do mv -i thumbnails/*${y}${m}* $D/${y}.${m}/thumbnails/; done
+y=2026
+for m in $(seq -f "%02g" 1 12); do mv -i *${y}${m}??_* $D/${y}.${m}/; done
+for m in $(seq -f "%02g" 1 12); do mv -i thumbnails/*${y}${m}??_* $D/${y}.${m}/thumbnails/; done
 
 cd $D
-for y in {2023..2024}; do
+for y in {2025..2026}; do
   for d in $(ls|grep $y); do
     echo $d
     ~/git/memories/utils/create_dir_index.rb $d > $d/dir_index.json
