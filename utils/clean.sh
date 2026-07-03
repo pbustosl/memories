@@ -54,7 +54,8 @@ done
 echo "🚀 Renaming files to match timestamp format"
 ls * | egrep -v '[0-9]{8}_[0-9]{6}(_.*)?.(jpg|png|mp4)' | while read weird; do
   extension="${weird##*.}"
-  newname="$(stat -f "%Sm" -t "%Y%m%d_%H%M%S" "$weird")"_0."${extension}"
+  shorthash=$(echo $weird | sha256sum | cut -c1-5)
+  newname="$(stat -f "%Sm" -t "%Y%m%d_%H%M%S" "$weird")"_${shorthash}."${extension}"
   [ -f "$newname" ] && { echo "tried to rename $weird, but another file exists with name: ${newname}"; echo "Aborting ❌"; exit 1; }
   echo "adding date-time, renaming $weird to $newname"
   mv -i "$weird" "$newname"
